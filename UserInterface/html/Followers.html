@@ -1,0 +1,68 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="../styles/styles.css"/>
+    <title>Followers</title>
+</head>
+<body>
+    <div id="followers-page">
+        <div id="nav-bar">
+            <span>
+                <img style="width: 40; height: 40;" src="https://sguru.org/wp-content/uploads/2018/02/new-twitter-bird-square.png" alt="Tweeter icon">
+            </span>
+            
+            <ul>
+                
+                <li @click="goToUser(signedInUser)" id="profile-icon" class="twitter-icons">Story</li>
+                <li @click="goToFeed" id="feed-icon" class="twitter-icons">Feed</li>
+                
+            </ul>
+            
+            <div class="dropdown">
+                <span class="menu-btn">My Account</span>
+                <div class="dropdown-content">
+                    
+                    <span @click="seeAllUsers()">See All Users</span>
+                    <hr>
+                    
+                    <span @click="signOut">Sign Out</span>
+                </div>
+            </div>
+        </div>
+    
+        <div class="follow-body followers-body">
+        
+            <div class="follow-main-container">
+                <div class="follow-container-title">Followers</div>
+                <div class="main-follow-flexbox"> 
+                    <div v-for="(follower, index) in followers" class="flex-person-follow">
+                        <div class="cut-off-bottom-flex"> 
+                            <img class="flex-img-profile" :src="follower.profilePic">
+                        </div>
+                        <div style="padding: 10px;">
+                            <user-name v-bind:handle="follower.handle" v-bind:on-click.prevent="goToUser"></user-name>
+                            <!-- <span class="name-follow">{{follower.name}}</span> -->
+                        </div>
+                        <div style="margin-left: auto;">
+                            <button class="follow-buttons" @click.prevent="followAction(follower.handle)">{{action(follower.handle)}}</button>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        
+        </div>
+    </div>
+
+</body>
+<!-- development version, includes helpful console warnings -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+<script src="../js/Followers.js" type="module"></script>
+
+</html>

@@ -1,0 +1,128 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="../styles/styles.css"/>
+    <title>Feed</title>
+</head>
+<body>
+    
+    <div id="feed-page">
+        <div id="nav-bar">
+            <span>
+                <img style="width: 40; height: 40;" src="https://sguru.org/wp-content/uploads/2018/02/new-twitter-bird-square.png" alt="Tweeter icon">
+            </span>
+            
+            <ul>
+               
+                <li @click="goToUser(signedInUser)" id="profile-icon" class="twitter-icons">Story</li>
+                <li @click="goToFeed" id="feed-icon" class="active-page twitter-icons">Feed</li>
+                
+            </ul>
+            <div class="dropdown">
+                <span class="menu-btn">My Account</span>
+                <div class="dropdown-content">
+                    
+                    <span @click="seeAllUsers()">See All Users</span>
+                    <hr>
+                    
+                    <span @click="signOut">Sign Out</span>
+                </div>
+            </div>
+    </div>
+    <section  style="margin-top: 30px;">
+
+            <!-- <div class="feed-middle-column" v-for="status in myFeed">
+                <div class="status">    
+                    <div style=" width: 100%; border-bottom: solid 1px #222; display: flex; flex-wrap: wrap;"> 
+                        <div style="overflow: hidden; margin: 6px; height: 50px; width: 50px; border-radius: 50%;">
+    
+                            <img style="width: 100%; height: auto;" :src="status.profilePic">
+                        </div>
+                        <h5>{{status.name}}</h5>
+                    </div> 
+                    <div style="width: 99%; padding: 10px 5px 0px 5px; margin-bottom: 10px; word-wrap: break-word;" v-html="status.status"></div>
+                    <span class="date-punch">{{status.date}}</span>  
+    
+                    <span style="width: 100%; margin-bottom: 10px; word-wrap: break-word;">{{status.status}}<span class="date-punch">{{status.date}}</span></span>
+                </div>
+            </div> -->
+
+            <div class="feed-middle-column" v-for="status in orderedFeed">
+                
+                <div class="status">
+                        <div style=" width: 100%; border-bottom: solid 1px #222; display: flex; flex-wrap: wrap;"> 
+                            <div style="overflow: hidden; margin: 6px; height: 50px; width: 50px; border-radius: 50%;">
+                                <img style="min-width: 100%; max-width: 150%; min-height: 100%;" :src="status.profilePic">
+                            </div>
+                            <div>
+
+                                <h5 @click="goToUser(status.author)" class="uniquePostEntry">{{status.author}}</h5>
+                                <span @click="goToSingleStatus(status)" class="see-post-alone">See post alone</span>
+                                <hr>
+                            </div>
+                        </div>
+
+                        <div class="post-output" >
+                            <template v-for="word in status.statusText">
+                                <!-- <user-status v-bind:status="status.status" @change="parseInput(status.status)"></user-status> -->
+                                <a v-if="word.type === 'url'" @click="goToSite(word.href)" class='URL uniquePostEntry' target='_blank'>{{word.showAs}} </a>
+                                <span v-else-if="word.type === 'handle'" class='uniquePostEntry handles' @click.prevent='goToUser(word.handle)'>{{word.handle}} </span>
+                                <span v-else-if="word.type === 'hashtag'" @click='goToHashtag(word.hashtag)' class='hashtag uniquePostEntry'>{{word.hashtag}} </span>
+                                <span v-else-if="word">{{word.text}} </span>
+                            </template> 
+                            <br>
+                            <div class='attachments-container' v-for="attachment in status.attachments">
+                                <img class="img-attachment" v-if="attachment.type ==='image'" :src="attachment.src">
+                                <iframe v-else-if="attachment.type ==='video'" :src="attachment.src" style="margin: auto;" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div> 
+                            <span class="date-punch">{{status.date}}</span>
+                        </div>
+                    </div>
+                
+                    <!--<div class="status">-->
+                    <!--        <div style=" width: 100%; border-bottom: solid 1px #222; display: flex; flex-wrap: wrap;"> -->
+                    <!--            <div style="overflow: hidden; margin: 6px; height: 50px; width: 50px; border-radius: 50%;">-->
+                    <!--                <img style="width: 100%; height: auto;" :src="status.profilePic">-->
+                    <!--            </div>-->
+                    <!--            <div>-->
+
+                    <!--                <h5 @click="goToUser(status.handle)" class="uniquePostEntry">{{status.handle}}</h5>-->
+                    <!--                <span @click="goToSingleStatus(status)" class="see-post-alone">See post alone</span>-->
+                    <!--                <hr>-->
+                    <!--            </div>-->
+                    <!--        </div>-->
+                    <!--    <div class="post-output" >-->
+                    <!--        <template v-for="word in status.status">-->
+                                <!-- <user-status v-bind:status="status.status" @change="parseInput(status.status)"></user-status> -->
+                    <!--            <a v-if="word.type === 'url'" @click="goToSite(word.href)" class='URL uniquePostEntry' target='_blank'>{{word.showAs}} </a>-->
+                    <!--            <span v-else-if="word.type === 'handle'" class='uniquePostEntry handles' @click='goToUser(word.handle)'>{{word.handle}} </span>-->
+                    <!--            <span v-else-if="word.type === 'hashtag'" @click='goToHashtag(word.hashtag)' class='hashtag uniquePostEntry'>{{word.hashtag}} </span>-->
+                    <!--            <span v-else-if="word">{{word.text}} </span>-->
+                    <!--        </template> -->
+                    <!--        <br>-->
+                    <!--        <div class='attachments-container' v-for="attachment in status.attachments">-->
+                    <!--            <img class="img-attachment" v-if="attachment.type ==='image'" :src="attachment.src">-->
+                    <!--            <video v-else-if="attachment.type ==='video'" class="video-attachment" controls><source :src="attachment.src"></source></video>-->
+                    <!--        </div> -->
+                    <!--        <span class="date-punch">{{status.date}}</span>-->
+                    <!--    </div>-->
+                    <!--</div>-->
+                </div>
+    </section>
+    </div>
+    
+</body>
+
+</html>
+<!-- development version, includes helpful console warnings -->
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+<script src="../js/Feed.js" type="module"></script>

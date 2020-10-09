@@ -1,0 +1,108 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="../styles/styles.css"/>
+    <title>Sign Up</title>
+</head>
+<body>
+<div id="SignUpPage">
+    <div id="nav-bar">
+        <span>
+            <img style="width: 40; height: 40;" src="https://sguru.org/wp-content/uploads/2018/02/new-twitter-bird-square.png" alt="Tweeter icon">
+        </span>
+        
+        <span>
+            
+        </span>
+    </div>
+    
+    <div id="sign-up-page">
+
+        <div v-bind:class="{hiding : isHiding}" id="sign-up-container">
+            <div id="login-container-title">
+                <h3 id="sign-up-font">Sign up for Tweeter</h3>
+            </div>
+
+            <div id="input-login-container">
+                <span class="input">
+                    <label for="handle">handle</label>
+                    <input name="handle" class="start-pages" @keyup="validateHandle" placeholder="@ponyboy" v-model="handle" type="text"><br>
+                </span><br>
+
+                <span class="input">
+                    <label for="psswd">password</label>
+                    <input placeholder="password" class="start-pages" @keyup="checkForInput" name="psswd" v-model="psswd" type="password"><br>
+                </span><br>
+
+                <span class="input">
+                    <label for="psswdConf">password confirmation</label>
+                    <input placeholder="re-enter your password" class="start-pages" @keyup="checkForInput" name="psswd" v-model="psswdConf" type="password"><br>
+                </span><br>
+                
+                <span class="input">
+                    <label for="firstName">first name</label>
+                    <input name="firstName" class="start-pages" @keyup="validateHandle" placeholder="" v-model="firstName" type="text"><br>
+                </span><br>
+
+                <span class="input">
+                    <label for="lastName">last name</label>
+                    <input class="start-pages" @keyup="checkForInput" name="lastName" v-model="lastName" type="text"><br>
+                </span><br>
+                
+                <span class="input">
+                    <label for="email">email</label>
+                    <input name="email" class="start-pages" @keyup="validateHandle" placeholder="get@me.com" v-model="email" type="email"><br>
+                </span><br>
+                
+                <span class="input">
+                    <label for="profile-photo">profile photo</label>
+                    <!-- <input type="file" accept="image/*" @change="onFileChanged($event)" ref="fileInput" id="file-input"> -->
+                    <button @click="browseFiles">Choose Profile Pic</button>
+                    
+                    <br>
+                    <!--<span v-if="profilePic != ''">-->
+                    <!--    <img :src="profilePic" style="width: 20px; height: auto;">-->
+                    <!--</span>-->
+                </span><br>
+
+                <div id="login-error-container">
+                    <span v-if="error !== ''">{{error}}</span>
+                </div>
+
+            </div>
+
+            <div class="two-col-container" style="margin: auto; width: 240px; height: 40px; padding-top: 20px;">
+                <input @click="login" style="width: 125px;" class="confirmation-buttons" value="Have an account?" type="button"/>
+                <input @click="createAccount" class="confirmation-buttons" v-bind:class="{colorAnimation : loginAnimation}" value="Next" type="button"/>
+            </div>
+
+        </div>
+
+        <div v-bind:class="{showing : isHiding, hiding: !isHiding}" 
+        style='position: absolute; background-color: white; border-radius: 9px; left: 43%; top: 20%;' 
+        >
+            <!--<button @click="confirmPhoto" style='position: relative; right: 0; cursor: pointer; text-align: center; width: 15px; display: block; margin-right: auto; background-color: black; color: white;'>X</button>-->
+            <!--<div v-html="picPreview"></div>-->
+            <div>
+                <img class='sign-up-img' :src='picPreview'><br>
+                <input @click="confirmPhoto" style='position: relative; right: 0; cursor: pointer;' class="confirmation-buttons" v-bind:class="{colorAnimation : loginAnimation}" value="Next" type="button"/>
+            </div>
+        </div>
+      </div>
+
+    </div>
+</body>
+<!-- development version, includes helpful console warnings -->
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script type="text/javascript" src="https://www.jsdelivr.com/package/npm/node-fs"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+<script src="../js/SignUp.js" type="module"></script>
+
+</html>

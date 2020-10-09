@@ -1,0 +1,172 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="../styles/styles.css"/>
+    <title>User Page</title>
+</head>
+<body>
+    <div id="user-page">
+        <div id="nav-bar">
+            <span>
+                <img style="width: 40; height: 40;" src="https://sguru.org/wp-content/uploads/2018/02/new-twitter-bird-square.png" alt="Tweeter icon">
+            </span>
+            
+            <ul>
+                
+                <li @click="goToUser(signedInUser)" id="profile-icon" class="twitter-icons">Story</li>
+                <li @click="goToFeed(signedInUser)" id="feed-icon" class="twitter-icons">Feed</li>
+                
+            </ul>
+            
+            <div class="dropdown">
+                <span class="menu-btn">My Account</span>
+                <div  class="dropdown-content" >
+                    <span v-if="signedInUser == user.handle" @click="browseFiles('profilePhoto')">Update Profile Photo</span>
+                    <hr v-if="signedInUser == user.handle">
+                    
+                    <span @click="seeAllUsers()">See All Users</span>
+                    <hr>
+                    
+                    <span @click="signOut">Sign Out</span>
+                </div>
+            </div>
+        </div>
+        
+        <section id="profile-section">
+            
+                <div id="profile-left-side">
+                        
+                </div>
+                <div>
+                    
+                    <div class="profile-middle-section">
+                        <h2 v-bind="user" class="handle-title">{{user.handle}}</h2>
+                        <div id="dual-photos">
+                            <div style="overflow: hidden">
+                                <img id="profile-photo" :src="user.profilePic">
+                            </div>
+                            <!--<div id="profile-photo" :style="{ 'background-image': 'url(' + user.profilePic + ')' }" style=" background-size: cover; repeat-x: no-repeat;"></div>-->
+                            <!--<img style="max-width: 100%; height: auto;" src="https://www.desktopbackground.org/download/1920x1080/2015/04/01/926447_3840x2160-boracay-island-philippines-wallpapers_3840x2160_h.jpg">-->
+                        </div>
+                    </div>
+                    <div style="min-width: 300px; margin: auto; justify-content: center;" class="col-3-profile">
+                        <div @click="goToFollowers" id="profile-followers" class="profile-options">Followers</div>
+                        <div @click="goToFeed" id="profile-feed" class="profile-options">Feed</div>
+                        <div @click="goToFollowing" id="profile-following" class="profile-options">Following</div>
+                        <!--<div @click="goToUser" style="border-bottom-right-radius: 9px;" class="profile-options">Story</div>-->
+                    </div>
+                </div>
+                <div id="profile-right-side"></div>
+            
+        </section>
+
+        <div class="col-2">
+            <section class="col-40-percent">
+                <div class="embedded-follow-container">
+                    <div class="follow-container-title">Followers</div>
+                    <div class="followers-img-grid"> 
+                        <div v-for="follower in followers.slice(0, 12)" class="person-follow">
+                            <div class="cut-off-bottom"> 
+                            
+                                <img class="img-profile" :src="follower.profilePic">
+                                <!--<img class="img-profile"  v-model="profilePhoto">-->
+                            </div>
+                            <user-name v-bind:handle="follower.handle" v-bind:on-click="goToUser"></user-name>
+                             <!--<div class="name-follow" @click="goToUser">{{follower.name}}</div> -->
+                        </div>
+                    </div>
+                    <span class="follow-bottom-section" @click="goToFollowers">See all</span>
+                </div>
+    
+                <div class="embedded-follow-container">
+                    <div class="follow-container-title">Following</div>
+                        <div class="followers-img-grid"> 
+                            <div v-for="User in following.slice(0, 12)" class="person-follow">
+                                <div class="cut-off-bottom"> 
+                                    <img class="img-profile" :src="User.profilePic">
+                                </div>
+                                <user-name v-bind:handle="User.handle" v-bind:handle="User.handle" v-bind:on-click="goToUser"></user-name>
+                                <!-- <span class="name-follow">{{User.name}}</span> -->
+                            </div>
+                    </div>
+                    <span class="follow-bottom-section" @click="goToFollowing">See all</span>
+                </div>
+            </section>
+                <section class="story">
+                    
+                    <div v-if="signedInUser == user.handle" class="middle-column">
+                        <div class="begin-post-container">
+                            <textarea class="post-input" rows="6" column="10" v-model="post" placeholder="Enlighten the world with your inner-most thoughts here."></textarea>
+                            <input type="text" style="display: none" placeholder="Image URL here" id="onlineImageURL" v-model="onlineImageURL" class="post-input-small">
+                            <input type="text" style="display: none" placeholder="Video URL here" id="onlineVideoURL" v-model="onlineVideoURL" class="post-input-small">
+                            
+                            <div class="post-container-options">
+                                <button class="status-btns" @click="enableOnlineContent">Attach Online Content</button>
+                                <button class="status-btns" @click="browseFiles('post')">Attachment File</button>
+                                <input type="button" class="status-btns" value="Post" @click="postStatus"/>
+                            </div>
+                        </div>
+    
+                        <div class="post-preview" v-html="postPreview">
+                            <!-- <span style="width: 99%; padding: 10px 5px 0px 5px; margin-bottom: 10px; word-wrap: break-word;"></span> -->
+                        </div>
+                    </div>
+                    
+                    <div class="middle-column" v-for="status in orderedStatuses">
+                        <div class="status">
+                            <div style=" width: 100%; border-bottom: solid 1px #222; display: flex; flex-wrap: wrap;"> 
+                                    <div style="overflow: hidden; margin: 6px; height: 50px; width: 50px; border-radius: 50%;">
+                                        <img style="min-width: 100%; max-width: 150%; min-height: 100%;" :src="user.profilePic">
+                                    </div>
+                                    <div>
+                                        <h5 @click="goToUser(status.handle)" class="uniquePostEntry">{{status.handle}}</h5>
+                                        <span @click="goToSingleStatus(status)" class="see-post-alone">See post alone</span>
+                                        <hr>
+                                    </div>
+                                    <div>
+                                        <span v-if="status.datePosted == currentDate"> {{status.timePosted}} </span>
+                                        <span v-else style="text-align: right;">{{status.datePosted}}</span>
+                                    </div>
+                                </div>
+                            
+                            <div class="post-output">
+                                <template v-for="word in status.statusText">
+                                    
+                                    <a v-if="word.type === 'url'" @click.prevent="goToSite(word.href)" class='URL uniquePostEntry' target='_blank'>{{word.showAs}} </a>
+                                    <span v-else-if="word.type === 'handle'" class='handles uniquePostEntry' @click.prevent='goToUser(word.handle)'>{{word.handle}} </span>
+                                    <span v-else-if="word.type === 'hashtag'" @click='goToHashtag(word.hashtag)' class='hashtag uniquePostEntry'>{{word.hashtag}} </span>
+                                    <span v-else-if="word">{{word.text}} </span>
+                                </template> 
+                                <br>
+                                <div class='attachments-container' v-for="attachment in status.attachments">
+                                    <img class="img-attachment" v-if="attachment.type ==='image'" :src="attachment.src">
+                                    <iframe v-else-if="attachment.type ==='video'" :src="attachment.src" style="margin: auto;" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div> 
+                                <span class="date-punch">{{status.date}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </section>
+        
+        </div>
+    </div>
+    
+</body>
+<!-- development version, includes helpful console warnings -->
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
+<script src="http://wzrd.in/standalone/uuid%2Fv4@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+<script src="../js/UserPage.js" type="module"></script>
+
+
+</html>
